@@ -1,7 +1,18 @@
 name: Mein Workflow
 on: push
 
+              - name: Checkout
+                uses: actions/checkout@v4.0.0
+            
+
 jobs:
+
+checkout:
+  runs-on: ubuntu-latest
+  steps:
+  - name: Checkout
+    uses: actions/checkout@v4.0.0
+
  test-diff:
    runs-on: ubuntu-latest
    steps:
@@ -12,3 +23,4 @@ jobs:
        from: users_1.yml
        to: users_2.yml
             
+ 
