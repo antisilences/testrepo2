@@ -7,7 +7,8 @@ jobs:
    steps:
    - name: Abweichungen herausfinden
      id: diff
-     uses: technote-space/diff-action@v3.1
+     uses: technote-space/get-diff-action@v4.0.1
      with:
        from: users_1.yml
        to: users_2.yml
+            
