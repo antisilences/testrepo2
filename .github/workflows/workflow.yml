@@ -1,0 +1,13 @@
+name: Mein Workflow
+on: push
+
+jobs:
+ test-diff:
+   runs-on: ubuntu-latest
+   steps:
+   - name: Abweichungen herausfinden
+     id: diff
+     uses: technote-space/diff-action@v3.1
+     with:
+       from: users_1.yml
+       to: users_2.yml
