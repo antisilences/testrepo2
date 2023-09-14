@@ -14,6 +14,6 @@ jobs:
        run: |
          diff -u <(sort users_1.yml) <(sort users_2.yml) > diff.txt
          if [ -s diff.txt ]; then
-           cat diff.txt
+           cat diff.txt | grep -vE "^[\ \<\>]*$"
            exit 1
          fi
