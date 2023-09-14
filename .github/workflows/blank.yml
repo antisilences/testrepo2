@@ -1,12 +1,19 @@
 name: Diff Check
-on: push
+on:
+ push:
+   branches:
+     - main
 
 jobs:
  compare:
    runs-on: ubuntu-latest
    steps:
-     - uses: actions/checkout@v2
-     - name: Compare Files
-       uses: rioj7/action-diff-files@v1
-       with:
-         files: users_1.yml,users_2.yml
+     - name: Checkout
+       uses: actions/checkout@v2
+     - name: Get Diff
+       run: |
+         diff -u <(sort users_1.yml) <(sort users_2.yml) > diff.txt
+         if [ -s diff.txt ]; then
+           cat diff.txt
+           exit 1
+         fi
