@@ -1,19 +1,23 @@
-name: Diff Check
-on:
- push:
-   branches:
-     - main
-
+on: pull_request
+name: CI
 jobs:
- compare:
-   runs-on: ubuntu-latest
-   steps:
-     - name: Checkout
-       uses: actions/checkout@v2
-     - name: Get Diff
-       run: |
-         diff -u <(sort users_1.yml) <(sort users_2.yml) > diff.txt
-         if [ -s diff.txt ]; then
-           cat diff.txt | grep -vE "^[\ \<\>]*$"
-           exit 1
-         fi
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: technote-space/get-diff-action@v6
+        with:
+          PATTERNS: |
+            +(src|__tests__)/**/*.ts
+            !src/exclude.ts
+          FILES: |
+            yarn.lock
+            .eslintrc
+      - name: Install Package dependencies
+        run: yarn install
+        if: env.GIT_DIFF
+      - name: Check code style
+        # Check only if there are differences in the source code
+        run: yarn lint
+        if: env.GIT_DIFF
