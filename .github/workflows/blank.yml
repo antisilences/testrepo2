@@ -1,0 +1,14 @@
+name: Diff Check
+on: push
+
+jobs:
+ compare:
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v2
+     - name: Compare files
+       run: diff --color=always users_1.yml users_2.yml > diff.txt
+     - name: Display differences
+       uses: technote-space/file-diff-action@v1.3
+       with:
+         file: "diff.txt"
