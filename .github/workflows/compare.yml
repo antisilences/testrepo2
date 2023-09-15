@@ -1,0 +1,34 @@
+name: Compare YML Files
+
+on:
+  push:
+    paths:
+      - 'users_1.yml'
+      - 'users_2.yml'
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+      
+    - name: Install YQ for processing and comparing YML files
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq
+        sudo wget https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_linux_amd64 -O /usr/bin/yq
+        sudo chmod +x /usr/bin/yq
+
+    - name: Compare YML files
+      run: |
+        DIFF=$(yq eval-all 'select(fileIndex == 0) != select(fileIndex == 1)' users_1.yml users_2.yml)
+        if [ "$DIFF" = "true" ]; then
+          echo "The files are different!"
+          diff users_1.yml users_2.yml
+          exit 1
+        else
+          echo "The files are identical!"
+        fi
+
